@@ -7,7 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="7.0.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="EasyNetQ" Version="8.0.0-beta9" />
+    <PackageReference Include="EasyNetQ.DI.Autofac" Version="8.0.0-beta9" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-preview.2.23128.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0-preview.2.23128.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-preview.2" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
@@ -17,8 +26,12 @@
     </Content>
   </ItemGroup>
 
-  <Target Name="OpenAPI" AfterTargets="Build">
-    <Exec Command="dotnet swagger tofile --output ./swagger/v1/swagger.yaml --yaml $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" />
-    <Exec Command="dotnet swagger tofile --output ./swagger/v1/swagger.json $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" />
-  </Target>
+  <ItemGroup>
+    <Folder Include="Dtos" />
+  </ItemGroup>
+
+<!--  <Target Name="OpenAPI" AfterTargets="Build">-->
+<!--    <Exec Command="dotnet swagger tofile &#45;&#45;output ./swagger/v1/swagger.yaml &#45;&#45;yaml $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" />-->
+<!--    <Exec Command="dotnet swagger tofile &#45;&#45;output ./swagger/v1/swagger.json $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" />-->
+<!--  </Target>-->
 </Project>
