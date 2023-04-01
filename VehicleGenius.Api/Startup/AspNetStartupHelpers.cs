@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using VehicleGenius.Api.Models;
 
-namespace VehicleGenius.Api;
+namespace VehicleGenius.Api.Startup;
 
 public static class AspNetStartupHelpers
 {
