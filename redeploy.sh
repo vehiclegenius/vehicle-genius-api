@@ -3,10 +3,10 @@
 # Exit on first error
 set -e
 
-sudo supervisorctl stop vehicle-genius-api
+sudo supervisorctl stop vehicle-genius-api || 0
 
 (cd VehicleGenius.Api && ./build.sh)
 
-sudo supervisorctl reread
-sudo supervisorctl update
-sudo supervisorctl start vehicle-genius-api
+sudo supervisorctl reread vehicle-genius-api
+sudo supervisorctl update vehicle-genius-api
+sudo supervisorctl restart vehicle-genius-api

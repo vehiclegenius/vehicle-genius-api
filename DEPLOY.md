@@ -76,3 +76,11 @@ sudo apt-get update
 sudo apt-get install supervisor
 cp supervisorctl.conf /etc/supervisor/conf.d/vehicle-genius-api.conf
 ```
+
+## Configuration
+
+```shell
+cp VehicleGenius.Api/appsettings.{Development,Production}.json
+```
+
+Configure as appropriate.
