@@ -1,4 +1,6 @@
 using Autofac;
+using VehicleGenius.Api.Services;
+using VehicleGenius.Api.Services.AI;
 using VehicleGenius.Api.Services.Consumers;
 using VehicleGenius.Api.Startup;
 using VehicleGenius.Api.Startup.Mq;
@@ -18,9 +20,17 @@ public class VehicleGeniusModule : Module
   {
     base.Load(containerBuilder);
 
+    RegisterApplicationServices(containerBuilder);
     RegisterStartupServices(containerBuilder);
     RegisterQueueServices(containerBuilder);
     RegisterConsumers(containerBuilder);
+  }
+
+  private static void RegisterApplicationServices(ContainerBuilder containerBuilder)
+  {
+    containerBuilder.RegisterType<AssistantService>().As<IAssistantService>();
+    containerBuilder.RegisterType<ChatGptService>().As<IAiService>();
+    containerBuilder.RegisterType<VehicleService>().As<IVehicleService>();
   }
 
   private static void RegisterStartupServices(ContainerBuilder containerBuilder)
