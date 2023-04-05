@@ -1,7 +1,9 @@
+using VehicleGenius.Api.Models.Entities;
+
 namespace VehicleGenius.Api.Services.AI;
 
 public interface IAiService
 {
-  Task<UserPromptParts> ParsePromptIntoParts(string prompt);
-  Task<string> BuildAnswer(object vehicle);
+  Task<QueryTopicApi> GetQueryTopicApi(string prompt);
+  Task<string> GetAnswer(object data, string prompt);
 }

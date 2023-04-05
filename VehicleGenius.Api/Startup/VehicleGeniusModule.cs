@@ -2,10 +2,10 @@ using Autofac;
 using VehicleGenius.Api.Services;
 using VehicleGenius.Api.Services.AI;
 using VehicleGenius.Api.Services.Consumers;
-using VehicleGenius.Api.Startup;
+using VehicleGenius.Api.Services.VinAudit;
 using VehicleGenius.Api.Startup.Mq;
 
-namespace VehicleGenius.Api;
+namespace VehicleGenius.Api.Startup;
 
 public class VehicleGeniusModule : Module
 {
@@ -31,6 +31,7 @@ public class VehicleGeniusModule : Module
     containerBuilder.RegisterType<AssistantService>().As<IAssistantService>();
     containerBuilder.RegisterType<ChatGptService>().As<IAiService>();
     containerBuilder.RegisterType<VehicleService>().As<IVehicleService>();
+    containerBuilder.RegisterType<VinAuditService>().As<IVinAuditService>();
   }
 
   private static void RegisterStartupServices(ContainerBuilder containerBuilder)
