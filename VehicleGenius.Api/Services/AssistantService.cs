@@ -1,3 +1,4 @@
+using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Models.Entities;
 using VehicleGenius.Api.Services.AI;
 using VehicleGenius.Api.Services.VinAudit;
@@ -15,19 +16,19 @@ class AssistantService : IAssistantService
     _vinAuditService = vinAuditService;
   }
   
-  public async Task<string> AnswerUserPrompt(string prompt)
+  public async Task<string> AnswerUserPrompt(AnswerUserPromptRequestDto requestDto)
   {
     var vinAuditUserData = new VinAuditPromptData
     {
-      Vin = "JTME6RFV0ND522512",
+      Vin = requestDto.Vin,
     };
-    var queryTopicApi = await _aiService.GetQueryTopicApi(prompt);
+    var queryTopicApi = await _aiService.GetQueryTopicApi(requestDto.Prompt);
     
     switch (queryTopicApi)
     {
       case QueryTopicApi.VinAuditSpecifications:
         var specifications = await _vinAuditService.GetSpecifications(vinAuditUserData);
-        return await _aiService.GetAnswer(specifications, prompt);
+        return await _aiService.GetAnswer(specifications, requestDto.Prompt);
       case QueryTopicApi.VinAuditMarketValue:
         return "foo";
       case QueryTopicApi.VinAuditOwnershipCost:

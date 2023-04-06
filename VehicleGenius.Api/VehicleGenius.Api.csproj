@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\Admin" />
-    <Folder Include="Dtos" />
   </ItemGroup>
 
 <!--  <Target Name="OpenAPI" AfterTargets="Build">-->

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Services;
 
 namespace VehicleGenius.Api.Controllers;
@@ -15,9 +16,10 @@ public class AssistantController : ControllerBase
   }
   
   [HttpPost]
-  public async Task<string> AnswerUserPrompt([FromBody] string prompt)
+  [Route("answer-user-prompt")]
+  public async Task<string> AnswerUserPrompt([FromBody] AnswerUserPromptRequestDto requestDto)
   {
-    var answer = await _assistantService.AnswerUserPrompt(prompt);
+    var answer = await _assistantService.AnswerUserPrompt(requestDto);
     return answer;
   }
 }
