@@ -2,5 +2,5 @@ namespace VehicleGenius.Api.Services.VinAudit;
 
 public interface IVinAuditService
 {
-  Task<VinAuditSpecificationsData> GetSpecifications(VinAuditPromptData vinAuditPromptData);
+  Task<VinAuditData> GetVinAuditData(VinAuditPromptData vinAuditPromptData);
 }

@@ -30,7 +30,6 @@ public class VehicleGeniusModule : Module
   {
     containerBuilder.RegisterType<AssistantService>().As<IAssistantService>();
     containerBuilder.RegisterType<ChatGptService>().As<IAiService>();
-    containerBuilder.RegisterType<VehicleService>().As<IVehicleService>();
     containerBuilder.RegisterType<VinAuditService>().As<IVinAuditService>();
   }
 
