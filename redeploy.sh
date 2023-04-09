@@ -7,6 +7,6 @@ sudo supervisorctl stop vehicle-genius-api || 0
 
 (cd VehicleGenius.Api && ./build.sh)
 
-sudo supervisorctl reread vehicle-genius-api
+sudo supervisorctl reread
 sudo supervisorctl update vehicle-genius-api
 sudo supervisorctl restart vehicle-genius-api
