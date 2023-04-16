@@ -17,7 +17,7 @@ public class AssistantController : ControllerBase
   
   [HttpPost]
   [Route("answer-user-prompt")]
-  public async Task<string> AnswerUserPrompt([FromBody] AnswerUserPromptRequestDto requestDto)
+  public async Task<List<ChatMessageDto>> AnswerUserPrompt([FromBody] AnswerUserPromptRequestDto requestDto)
   {
     var answer = await _assistantService.AnswerUserPrompt(requestDto);
     return answer;

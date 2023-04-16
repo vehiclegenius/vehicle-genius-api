@@ -3,5 +3,5 @@ namespace VehicleGenius.Api.Dtos;
 public class AnswerUserPromptRequestDto
 {
   public string Vin { get; set; }
-  public string Prompt { get; set; }
+  public List<ChatMessageDto> Messages { get; set; }
 }

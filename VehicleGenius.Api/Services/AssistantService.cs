@@ -1,3 +1,4 @@
+using OpenAI.GPT3.ObjectModels.RequestModels;
 using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Models.Entities;
 using VehicleGenius.Api.Services.AI;
@@ -16,7 +17,7 @@ class AssistantService : IAssistantService
     _vinAuditService = vinAuditService;
   }
   
-  public async Task<string> AnswerUserPrompt(AnswerUserPromptRequestDto requestDto)
+  public async Task<List<ChatMessageDto>> AnswerUserPrompt(AnswerUserPromptRequestDto requestDto)
   {
     var vinAuditUserData = new VinAuditPromptData
     {
@@ -131,39 +132,9 @@ Over 5 years, the total cost is $54,353.";
     {
       Data = summary,
       DataInFuture = false,
-      Prompt = requestDto.Prompt,
+      Messages = requestDto.Messages,
     });
 
     return answer;
-    
-    // var queryTopicApi = await _aiService.GetQueryTopicApi(requestDto.Prompt);
-    //
-    // switch (queryTopicApi)
-    // {
-    //   case QueryTopicApi.VinAuditSpecifications:
-    //     return await _aiService.GetAnswer(new GetAnswerRequest
-    //     {
-    //       Data = await _vinAuditService.GetMarketValue(vinAuditUserData),
-    //       DataInFuture = false,
-    //       Prompt = requestDto.Prompt,
-    //     });
-    //   case QueryTopicApi.VinAuditMarketValue:
-    //     return await _aiService.GetAnswer(new GetAnswerRequest
-    //     {
-    //       Data = await _vinAuditService.GetSpecifications(vinAuditUserData),
-    //       DataInFuture = false,
-    //       Prompt = requestDto.Prompt,
-    //     });
-    //   case QueryTopicApi.VinAuditOwnershipCost:
-    //     return await _aiService.GetAnswer(new GetAnswerRequest
-    //     {
-    //       Data = await _vinAuditService.GetOwnershipCost(vinAuditUserData),
-    //       DataInFuture = true,
-    //       Prompt = requestDto.Prompt,
-    //     });
-    //   case QueryTopicApi.None:
-    //   default:
-    //     throw new Exception("No appropriate API found to come up with a satisfying answer to your question.");
-    // }
   }
 }
