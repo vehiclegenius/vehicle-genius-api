@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using VehicleGenius.Api.Models.Entities;
 
 namespace VehicleGenius.Api.Models;
 
@@ -8,4 +9,7 @@ public class VehicleGeniusDbContext : DbContext
     : base(options)
   {
   }
+
+  public DbSet<SummaryTemplate> SummaryTemplates { get; set; }
+  public DbSet<Vehicle> Vehicles { get; set; }
 }

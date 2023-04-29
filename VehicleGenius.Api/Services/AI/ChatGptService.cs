@@ -15,36 +15,6 @@ class ChatGptService : IAiService
   private readonly string _summaryPromptSystem =
     "You are a helpful assistant. You take JSON and transform it into a digestible list of data. You don't omit any numbers. Money amounts are in dollars. The prompt may contain further hints.";
 
-  private readonly string _topicQueryPromptSystemTemplate =
-    @"You are a helpful assistant. You help me figure out to what possible topic the sentence/question could be related to. Don't use any words to share the result, only return the UUID before the colon.";
-  private readonly List<QueryTopic> _queryTopics = new()
-  {
-    new()
-    {
-      Id = Guid.NewGuid(),
-      AiMatchingDescription = "The worth of the car in the future or other ownership cost topics like depreciation cost, insurance cost, fuel cost, maintenance cost, repairs cost, fees cost, and total costs.",
-      Api = QueryTopicApi.VinAuditOwnershipCost,
-    },
-    new()
-    {
-      Id = Guid.NewGuid(),
-      AiMatchingDescription = "The market value of the car in present time and other data related to the price of the car.",
-      Api = QueryTopicApi.VinAuditMarketValue,
-    },
-    new()
-    {
-      Id = Guid.NewGuid(),
-      AiMatchingDescription = "The specifications of the car, its engine, fuel usage, etc.",
-      Api = QueryTopicApi.VinAuditSpecifications,
-    },
-    new()
-    {
-      Id = Guid.NewGuid(),
-      AiMatchingDescription = "None of the above.",
-      Api = QueryTopicApi.None,
-    },
-  };
-
   private readonly string _answerPromptSystemTemplate = "You are a helpful assistant.";
 
   public ChatGptService(IConfiguration configuration)

@@ -9,17 +9,25 @@ namespace VehicleGenius.Api.Controllers;
 public class AssistantController : ControllerBase
 {
   private readonly IAssistantService _assistantService;
+  private readonly IVehicleService _vehicleService;
 
-  public AssistantController(IAssistantService assistantService)
+  public AssistantController(IAssistantService assistantService, IVehicleService vehicleService)
   {
     _assistantService = assistantService;
+    _vehicleService = vehicleService;
   }
   
   [HttpPost]
   [Route("answer-user-prompt")]
-  public async Task<List<ChatMessageDto>> AnswerUserPrompt([FromBody] AnswerUserPromptRequestDto requestDto)
+  public async Task<IActionResult> AnswerUserPrompt([FromBody] AnswerUserPromptRequestDto requestDto)
   {
+    if (!await _vehicleService.VehicleExistsAsync(requestDto.VehicleId, CancellationToken.None))
+    {
+      return NotFound();
+    }
+    
     var answer = await _assistantService.AnswerUserPrompt(requestDto);
-    return answer;
+
+    return Ok(answer);
   }
 }
