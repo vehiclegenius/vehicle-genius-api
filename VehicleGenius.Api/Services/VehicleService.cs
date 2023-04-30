@@ -65,9 +65,14 @@ class VehicleService : IVehicleService
 
     var specificationsScriptObject = new ScriptObject();
     specificationsScriptObject.Add("Attributes", specificationsAttributesScriptObject);
+    
+    var ownershipCostsScriptObject = new ScriptObject();
+    ownershipCostsScriptObject.Import(vehicle.VinAuditData.OwnershipCost,
+      renamer: member => member.Name);
 
     var scriptObject = new ScriptObject();
     scriptObject.Add("Specifications", specificationsScriptObject);
+    scriptObject.Add("OwnershipCost", ownershipCostsScriptObject);
     
     var context = new TemplateContext();
     context.PushGlobal(scriptObject);

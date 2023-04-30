@@ -22,7 +22,7 @@ class SummaryTemplateService : ISummaryTemplateService
     return new SummaryTemplateDto
     {
       Id = Guid.NewGuid(),
-      Template = @"
+      Template = @"Vehicle's specifications:
 - Year: {{ Specifications.Attributes.Year }}
 - Make: {{ Specifications.Attributes.Make }}
 - Model: {{ Specifications.Attributes.Model }}
@@ -57,6 +57,39 @@ class SummaryTemplateService : ISummaryTemplateService
 - Invoice price: {{ Specifications.Attributes.InvoicePrice }}
 - Delivery charges: {{ Specifications.Attributes.DeliveryCharges }}
 - Manufacturer suggested retail price: {{ Specifications.Attributes.ManufacturerSuggestedRetailPrice }}
+
+Vehicle's ownership cost data:
+- Current mileage: {{ OwnershipCost.MileageStart }}
+- Estimated yearly mileage: {{ OwnershipCost.MileageYear }}
+- Estimated yearly depreciation cost for the next 5 years per year:
+{{ for cost in OwnershipCost.DepreciationCost ~}}
+  - ${{ cost }}
+{{ end ~}}
+- Estimated yearly insurance cost for the next 5 years per year:
+{{ for cost in OwnershipCost.InsuranceCost ~}}
+  - ${{ cost }}
+{{ end ~}}
+- Estimated yearly fuel cost for the next 5 years per year:
+{{ for cost in OwnershipCost.FuelCost ~}}
+  - ${{ cost }}
+{{ end ~}}
+- Estimated yearly maintenance cost for the next 5 years per year:
+{{ for cost in OwnershipCost.MaintenanceCost ~}}
+  - ${{ cost }}
+{{ end ~}}
+- Estimated yearly repairs cost for the next 5 years per year:
+{{ for cost in OwnershipCost.RepairsCost ~}}
+  - ${{ cost }}
+{{ end ~}}
+- Estimated yearly state fees & taxes cost for the next 5 years per year:
+{{ for cost in OwnershipCost.FeesCost ~}}
+  - ${{ cost }}
+{{ end ~}}
+- Estimated yearly cost for the next 5 years per year:
+{{ for cost in OwnershipCost.TotalCost ~}}
+  - ${{ cost }}
+{{ end ~}}
+- Estimated 5-year total cost: ${{ OwnershipCost.TotalCostSum }}
 ",
     };
     
