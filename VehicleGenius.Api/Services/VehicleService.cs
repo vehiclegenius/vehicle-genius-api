@@ -40,6 +40,12 @@ class VehicleService : IVehicleService
     return dtos;
   }
 
+  public async Task<VehicleDto> GetSingleVehicleAsync(Guid vehicleId, CancellationToken ct)
+  {
+    var vehicle = await GetQueryable().FirstOrDefaultAsync(v => v.Id == vehicleId, ct);
+    return _vehicleMapperService.MapToDto(vehicle);
+  }
+
   public async Task<string> GetVehicleSummaryAsync(Guid vehicleId, CancellationToken ct)
   {
     var vehicle = await GetQueryable().FirstOrDefaultAsync(v => v.Id == vehicleId, ct);
