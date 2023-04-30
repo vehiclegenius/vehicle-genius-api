@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VehicleGenius.Api.Models;
@@ -12,9 +13,11 @@ using VehicleGenius.Api.Services.VinAudit;
 namespace VehicleGenius.Api.Migrations
 {
     [DbContext(typeof(VehicleGeniusDbContext))]
-    partial class VehicleGeniusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230430130304_AddDatesToSummaryTemplate")]
+    partial class AddDatesToSummaryTemplate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

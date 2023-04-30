@@ -6,5 +6,4 @@ namespace VehicleGenius.Api.Services.AI;
 public interface IAiService
 {
   Task<List<ChatMessageDto>> GetAnswer(GetAnswerRequest request);
-  Task<string> SummarizeVehicleData(VinAuditData vehicleData);
 }

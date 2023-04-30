@@ -34,12 +34,15 @@ public class VehicleGeniusModule : Module
   {
     containerBuilder.RegisterType<VehicleMapperService>()
       .As<IMapperService<Vehicle, VehicleDto>>();
+    containerBuilder.RegisterType<SummaryTemplateMapperService>()
+      .As<IMapperService<SummaryTemplate, SummaryTemplateDto>>();
   }
 
   private static void RegisterApplicationServices(ContainerBuilder containerBuilder)
   {
     containerBuilder.RegisterType<AssistantService>().As<IAssistantService>();
     containerBuilder.RegisterType<ChatGptService>().As<IAiService>();
+    containerBuilder.RegisterType<SummaryTemplateService>().As<ISummaryTemplateService>();
     containerBuilder.RegisterType<VehicleService>().As<IVehicleService>();
     containerBuilder.RegisterType<VinAuditService>().As<IVinAuditService>();
   }

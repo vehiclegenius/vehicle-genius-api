@@ -1,10 +1,7 @@
-using Newtonsoft.Json;
 using OpenAI.GPT3;
 using OpenAI.GPT3.Managers;
 using OpenAI.GPT3.ObjectModels.RequestModels;
 using VehicleGenius.Api.Dtos;
-using VehicleGenius.Api.Models.Entities;
-using VehicleGenius.Api.Services.VinAudit;
 
 namespace VehicleGenius.Api.Services.AI;
 
@@ -25,22 +22,8 @@ class ChatGptService : IAiService
     });
   }
 
-  private async Task<string> ResponseContent(ChatCompletionCreateRequest chatCompletionCreateRequest)
-  {
-    var completionResult = await _openAi.ChatCompletion.CreateCompletion(chatCompletionCreateRequest);
-
-    if (!completionResult.Successful)
-    {
-      throw new Exception("ChatGPT failed to parse prompt.");
-    }
-
-    var responseContent = completionResult.Choices.First().Message.Content;
-    return responseContent;
-  }
-
   public async Task<List<ChatMessageDto>> GetAnswer(GetAnswerRequest request)
   {
-    var pastOrFuture = request.DataInFuture ? "of the future" : "of the past";
     var promptWithData = @$"With this data:
 
 {request.Data}
@@ -61,69 +44,28 @@ class ChatGptService : IAiService
       FrequencyPenalty = 0,
       MaxTokens = 512,
     };
+    var response = await ResponseContent(chatCompletionCreateRequest);
     var responseMessages = request.Messages.Concat(new[]
     {
       new ChatMessageDto()
       {
-        Content = await ResponseContent(chatCompletionCreateRequest),
+        Content = response,
         Role = "assistant",
       },
     }).ToList();
     return responseMessages;
   }
 
-  public async Task<string> SummarizeVehicleData(VinAuditData vehicleData)
+  private async Task<string> ResponseContent(ChatCompletionCreateRequest chatCompletionCreateRequest)
   {
-    var prompts = new List<ChatCompletionCreateRequest>()
-    {
-      new()
-      {
-        Messages = new List<ChatMessage>()
-        {
-          ChatMessage.FromSystem(_summaryPromptSystem),
-          ChatMessage.FromUser($"Current vehicle specifications:\n\n{JsonConvert.SerializeObject(vehicleData.Specifications)}"),
-        },
-        Model = "gpt-3.5-turbo",
-        Temperature = (float)0.7,
-        TopP = (float)1,
-        PresencePenalty = 0,
-        FrequencyPenalty = 0,
-      },
-      new()
-      {
-        Messages = new List<ChatMessage>()
-        {
-          ChatMessage.FromSystem(_summaryPromptSystem),
-          ChatMessage.FromUser($"Current vehicle market value data:\n\n{JsonConvert.SerializeObject(vehicleData.MarketValue)}"),
-        },
-        Model = "gpt-3.5-turbo",
-        Temperature = (float)0.7,
-        TopP = (float)1,
-        PresencePenalty = 0,
-        FrequencyPenalty = 0,
-      },
-      new()
-      {
-        Messages = new List<ChatMessage>()
-        {
-          ChatMessage.FromSystem(_summaryPromptSystem),
-          ChatMessage.FromUser($"Future vehicle costs associated with various expenses, costs are in USD and represent a year on year cost:\n\n{JsonConvert.SerializeObject(vehicleData.OwnershipCost)}"),
-        },
-        Model = "gpt-3.5-turbo",
-        Temperature = (float)0.7,
-        TopP = (float)1,
-        PresencePenalty = 0,
-        FrequencyPenalty = 0,
-      }
-    };
+    var completionResult = await _openAi.ChatCompletion.CreateCompletion(chatCompletionCreateRequest);
 
-    var result = "";
-
-    foreach (var chatCompletionCreateRequest in prompts)
+    if (!completionResult.Successful)
     {
-      result += await ResponseContent(chatCompletionCreateRequest);
+      throw new Exception("ChatGPT failed to parse prompt.");
     }
 
-    return result;
+    var responseContent = completionResult.Choices.First().Message.Content;
+    return responseContent;
   }
 }
