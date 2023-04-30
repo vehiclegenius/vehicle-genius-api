@@ -58,6 +58,18 @@ class SummaryTemplateService : ISummaryTemplateService
 - Delivery charges: {{ Specifications.Attributes.DeliveryCharges }}
 - Manufacturer suggested retail price: {{ Specifications.Attributes.ManufacturerSuggestedRetailPrice }}
 
+Vehicle's market value data:
+- Estimated average market price: ${{ MarketValue.Mean }}
+- Standard deviation of prices: ${{ MarketValue.Stdev }}
+- Data points count: {{ MarketValue.Count }}
+- Mileage used to compute: {{ MarketValue.Mileage }}
+- Certainty: {{ MarketValue.Certainty }}%
+- Period: {{ MarketValue.Period[0] }} to {{ MarketValue.Period[1] }}
+- Prices:
+  - Estimated average market price: ${{ MarketValue.Prices.Average }}
+  - Estimated average below market price: ${{ MarketValue.Prices.Below }}
+  - Estimated average above market price: ${{ MarketValue.Prices.Above }}
+
 Vehicle's ownership cost data:
 - Current mileage: {{ OwnershipCost.MileageStart }}
 - Estimated yearly mileage: {{ OwnershipCost.MileageYear }}
@@ -89,10 +101,9 @@ Vehicle's ownership cost data:
 {{ for cost in OwnershipCost.TotalCost ~}}
   - ${{ cost }}
 {{ end ~}}
-- Estimated 5-year total cost: ${{ OwnershipCost.TotalCostSum }}
-",
+- Estimated 5-year total cost: ${{ OwnershipCost.TotalCostSum }}",
     };
-    
+
     // var summaryTemplate = await GetLastUpdatedForVersionAsync(version, ct);
     // return _summaryTemplateMapperService.MapToDto(summaryTemplate);
   }

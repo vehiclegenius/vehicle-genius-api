@@ -69,9 +69,20 @@ class VehicleService : IVehicleService
     var ownershipCostsScriptObject = new ScriptObject();
     ownershipCostsScriptObject.Import(vehicle.VinAuditData.OwnershipCost,
       renamer: member => member.Name);
+    
+    var marketValuePricesScriptObject = new ScriptObject();
+    marketValuePricesScriptObject.Import(vehicle.VinAuditData.MarketValue.Prices,
+      renamer: member => member.Name);
+    
+    var marketValueScriptObject = new ScriptObject();
+    marketValueScriptObject.Import(vehicle.VinAuditData.MarketValue,
+      renamer: member => member.Name);
+    marketValueScriptObject.Remove("Prices");
+    marketValueScriptObject.Add("Prices", marketValuePricesScriptObject);
 
     var scriptObject = new ScriptObject();
     scriptObject.Add("Specifications", specificationsScriptObject);
+    scriptObject.Add("MarketValue", marketValueScriptObject);
     scriptObject.Add("OwnershipCost", ownershipCostsScriptObject);
     
     var context = new TemplateContext();
