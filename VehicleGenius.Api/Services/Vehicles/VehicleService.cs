@@ -51,45 +51,9 @@ class VehicleService : IVehicleService
   {
     var vehicle = await GetQueryable().FirstOrDefaultAsync(v => v.Id == vehicleId, ct);
     var template = await _summaryTemplateService.GetForVersionAsync(1, ct);
-    var liquidTemplate = Template.Parse(template.Template);
-    var context = GetTemplateContext(vehicle);
-    var interpolated = await liquidTemplate.RenderAsync(context);
+    var interpolated = await _summaryTemplateService.RenderTemplateAsync(template, vehicle, ct);
 
     return interpolated;
-  }
-
-  private static TemplateContext GetTemplateContext(Vehicle? vehicle)
-  {
-    var specificationsAttributesScriptObject = new ScriptObject();
-    specificationsAttributesScriptObject.Import(vehicle.VinAuditData.Specifications.Attributes,
-      renamer: member => member.Name);
-
-    var specificationsScriptObject = new ScriptObject();
-    specificationsScriptObject.Add("Attributes", specificationsAttributesScriptObject);
-    
-    var ownershipCostsScriptObject = new ScriptObject();
-    ownershipCostsScriptObject.Import(vehicle.VinAuditData.OwnershipCost,
-      renamer: member => member.Name);
-    
-    var marketValuePricesScriptObject = new ScriptObject();
-    marketValuePricesScriptObject.Import(vehicle.VinAuditData.MarketValue.Prices,
-      renamer: member => member.Name);
-    
-    var marketValueScriptObject = new ScriptObject();
-    marketValueScriptObject.Import(vehicle.VinAuditData.MarketValue,
-      renamer: member => member.Name);
-    marketValueScriptObject.Remove("Prices");
-    marketValueScriptObject.Add("Prices", marketValuePricesScriptObject);
-
-    var scriptObject = new ScriptObject();
-    scriptObject.Add("Specifications", specificationsScriptObject);
-    scriptObject.Add("MarketValue", marketValueScriptObject);
-    scriptObject.Add("OwnershipCost", ownershipCostsScriptObject);
-    
-    var context = new TemplateContext();
-    context.PushGlobal(scriptObject);
-
-    return context;
   }
 
   public async Task UpdateVehicleAsync(VehicleDto vehicleDto)

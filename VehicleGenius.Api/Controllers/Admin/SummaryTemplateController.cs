@@ -25,15 +25,17 @@ public class SummaryTemplateController : ControllerBase
     var answer = await _summaryTemplateService.GetForVersionAsync(1, ct);
     return Ok(answer);
   }
-  
+
   [HttpPut]
   [Route("current")]
-  public async Task<ActionResult<SummaryTemplateDto>> UpdateCurrent([FromBody] SummaryTemplateDto summaryTemplateDto, CancellationToken ct)
+  public async Task<ActionResult<SummaryTemplateDto>> UpdateCurrent(
+    [FromBody] SummaryTemplateDto summaryTemplateDto,
+    CancellationToken ct)
   {
     await _summaryTemplateService.UpdateForVersionAsync(1, summaryTemplateDto, ct);
     return NoContent();
   }
-  
+
   [HttpGet]
   [Route("example")]
   public async Task<ActionResult<string>> GetExample(CancellationToken ct)
@@ -44,7 +46,18 @@ public class SummaryTemplateController : ControllerBase
     {
       return NotFound("No vehicles");
     }
+
     var summary = await _vehicleService.GetVehicleSummaryAsync(vehicle.Id, ct);
     return Ok(summary);
+  }
+
+  [HttpPost]
+  [Route("validate")]
+  public async Task<ActionResult<SummaryTemplateValidationResultDto>> Validate(
+    [FromBody] SummaryTemplateDto summaryTemplateDto,
+    CancellationToken ct)
+  {
+    var answer = await _summaryTemplateService.ValidateAsync(summaryTemplateDto, ct);
+    return Ok(answer);
   }
 }
