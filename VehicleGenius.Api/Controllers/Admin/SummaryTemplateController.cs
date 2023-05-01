@@ -40,7 +40,7 @@ public class SummaryTemplateController : ControllerBase
   {
     var vehicles = await _vehicleService.GetVehiclesAsync(ct);
     var vehicle = vehicles.FirstOrDefault();
-    if (vehicle == null)
+    if (vehicle is null)
     {
       return NotFound("No vehicles");
     }

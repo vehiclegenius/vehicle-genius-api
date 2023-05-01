@@ -15,7 +15,6 @@ public class SummaryTemplateMapperService : IMapperService<SummaryTemplate, Summ
   {
     return new SummaryTemplateDto
     {
-      Id = model.Id,
       Template = model.Template,
     };
   }

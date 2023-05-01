@@ -34,6 +34,12 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Services\SummaryTemplates\DefaultTemplate.liquid">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 <!--  <Target Name="OpenAPI" AfterTargets="Build">-->
 <!--    <Exec Command="dotnet swagger tofile &#45;&#45;output ./swagger/v1/swagger.yaml &#45;&#45;yaml $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" />-->
 <!--    <Exec Command="dotnet swagger tofile &#45;&#45;output ./swagger/v1/swagger.json $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" />-->
