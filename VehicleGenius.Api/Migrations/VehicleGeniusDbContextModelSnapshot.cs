@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VehicleGenius.Api.Models;
-using VehicleGenius.Api.Services.VinAudit;
+using VehicleGenius.Api.Services.Vehicles.VinAudit;
 
 #nullable disable
 

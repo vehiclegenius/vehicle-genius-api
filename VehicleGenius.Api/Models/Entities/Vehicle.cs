@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using VehicleGenius.Api.Services.VinAudit;
+using VehicleGenius.Api.Services.Vehicles.VinAudit;
 
 namespace VehicleGenius.Api.Models.Entities;
 

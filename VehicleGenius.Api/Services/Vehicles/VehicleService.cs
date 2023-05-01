@@ -5,9 +5,10 @@ using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Models;
 using VehicleGenius.Api.Models.Entities;
 using VehicleGenius.Api.Services.Mappers;
-using VehicleGenius.Api.Services.VinAudit;
+using VehicleGenius.Api.Services.SummaryTemplates;
+using VehicleGenius.Api.Services.Vehicles.VinAudit;
 
-namespace VehicleGenius.Api.Services;
+namespace VehicleGenius.Api.Services.Vehicles;
 
 class VehicleService : IVehicleService
 {

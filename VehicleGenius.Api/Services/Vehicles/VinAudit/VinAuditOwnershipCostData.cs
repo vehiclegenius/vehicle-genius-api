@@ -1,4 +1,4 @@
-namespace VehicleGenius.Api.Services.VinAudit;
+namespace VehicleGenius.Api.Services.Vehicles.VinAudit;
 
 using Newtonsoft.Json;
 

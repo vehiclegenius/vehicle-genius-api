@@ -4,7 +4,7 @@ using VehicleGenius.Api.Models;
 using VehicleGenius.Api.Models.Entities;
 using VehicleGenius.Api.Services.Mappers;
 
-namespace VehicleGenius.Api.Services;
+namespace VehicleGenius.Api.Services.SummaryTemplates;
 
 class SummaryTemplateService : ISummaryTemplateService
 {

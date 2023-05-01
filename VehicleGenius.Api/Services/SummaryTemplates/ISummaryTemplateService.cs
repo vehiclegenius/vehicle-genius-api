@@ -1,6 +1,6 @@
 using VehicleGenius.Api.Dtos;
 
-namespace VehicleGenius.Api.Services;
+namespace VehicleGenius.Api.Services.SummaryTemplates;
 
 public interface ISummaryTemplateService
 {

@@ -1,4 +1,4 @@
-using VehicleGenius.Api.Services.VinAudit;
+using VehicleGenius.Api.Services.Vehicles.VinAudit;
 
 namespace VehicleGenius.Api.Dtos;
 

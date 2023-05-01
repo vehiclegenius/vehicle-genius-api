@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using VehicleGenius.Api.Services.VinAudit;
+using VehicleGenius.Api.Services.Vehicles.VinAudit;
 
 #nullable disable
 

@@ -1,7 +1,8 @@
 using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Models.Entities;
+using VehicleGenius.Api.Services.Mappers;
 
-namespace VehicleGenius.Api.Services.Mappers;
+namespace VehicleGenius.Api.Services.SummaryTemplates;
 
 public class SummaryTemplateMapperService : IMapperService<SummaryTemplate, SummaryTemplateDto>
 {

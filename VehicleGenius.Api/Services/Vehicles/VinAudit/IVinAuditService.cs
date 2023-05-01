@@ -1,4 +1,4 @@
-namespace VehicleGenius.Api.Services.VinAudit;
+namespace VehicleGenius.Api.Services.Vehicles.VinAudit;
 
 public interface IVinAuditService
 {

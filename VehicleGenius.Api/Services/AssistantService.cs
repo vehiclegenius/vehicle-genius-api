@@ -1,5 +1,6 @@
 using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Services.AI;
+using VehicleGenius.Api.Services.Vehicles;
 
 namespace VehicleGenius.Api.Services;
 

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using VehicleGenius.Api.Dtos;
-using VehicleGenius.Api.Services;
+using VehicleGenius.Api.Services.Vehicles;
 
 namespace VehicleGenius.Api.Controllers;
 

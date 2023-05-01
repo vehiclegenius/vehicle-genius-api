@@ -5,7 +5,9 @@ using VehicleGenius.Api.Services;
 using VehicleGenius.Api.Services.AI;
 using VehicleGenius.Api.Services.Consumers;
 using VehicleGenius.Api.Services.Mappers;
-using VehicleGenius.Api.Services.VinAudit;
+using VehicleGenius.Api.Services.SummaryTemplates;
+using VehicleGenius.Api.Services.Vehicles;
+using VehicleGenius.Api.Services.Vehicles.VinAudit;
 using VehicleGenius.Api.Startup.Mq;
 
 namespace VehicleGenius.Api.Startup;

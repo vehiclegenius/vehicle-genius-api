@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
-namespace VehicleGenius.Api.Services.VinAudit;
+namespace VehicleGenius.Api.Services.Vehicles.VinAudit;
 
 public class VinAuditSpecificationsData
 {

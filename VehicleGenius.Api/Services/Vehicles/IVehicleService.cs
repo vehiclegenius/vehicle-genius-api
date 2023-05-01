@@ -1,7 +1,7 @@
 using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Models.Entities;
 
-namespace VehicleGenius.Api.Services;
+namespace VehicleGenius.Api.Services.Vehicles;
 
 public interface IVehicleService
 {

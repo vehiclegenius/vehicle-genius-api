@@ -3,7 +3,7 @@ using Flurl.Http;
 using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Models.Entities;
 
-namespace VehicleGenius.Api.Services.VinAudit;
+namespace VehicleGenius.Api.Services.Vehicles.VinAudit;
 
 class VinAuditService : IVinAuditService
 {
