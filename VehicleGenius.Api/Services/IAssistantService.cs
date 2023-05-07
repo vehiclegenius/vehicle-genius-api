@@ -5,4 +5,5 @@ namespace VehicleGenius.Api.Services;
 public interface IAssistantService
 {
   public Task<List<ChatMessageDto>> AnswerUserPrompt(AnswerUserPromptRequestDto requestDto);
+  public Task GivePromptFeedback(GivePromptFeedbackRequestDto requestDto);
 }

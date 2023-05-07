@@ -10,6 +10,7 @@ public class VehicleGeniusDbContext : DbContext
   {
   }
 
+  public DbSet<PromptFeedback> PromptFeedbacks { get; set; }
   public DbSet<SummaryTemplate> SummaryTemplates { get; set; }
   public DbSet<Vehicle> Vehicles { get; set; }
 }

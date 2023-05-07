@@ -19,7 +19,7 @@ public class AssistantController : ControllerBase
   }
   
   [HttpPost]
-  [Route("answer-user-prompt")]
+  [Route("prompt/answer")]
   public async Task<IActionResult> AnswerUserPrompt([FromBody] AnswerUserPromptRequestDto requestDto)
   {
     if (!await _vehicleService.VehicleExistsAsync(requestDto.VehicleId, CancellationToken.None))
@@ -30,5 +30,19 @@ public class AssistantController : ControllerBase
     var answer = await _assistantService.AnswerUserPrompt(requestDto);
 
     return Ok(answer);
+  }
+  
+  [HttpPost]
+  [Route("prompt/feedback")]
+  public async Task<IActionResult> GivePromptFeedback([FromBody] GivePromptFeedbackRequestDto requestDto)
+  {
+    if (!await _vehicleService.VehicleExistsAsync(requestDto.VehicleId, CancellationToken.None))
+    {
+      return NoContent();
+    }
+    
+    await _assistantService.GivePromptFeedback(requestDto);
+
+    return NoContent();
   }
 }
