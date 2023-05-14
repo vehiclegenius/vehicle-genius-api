@@ -17,7 +17,7 @@ public class VehicleController : ControllerBase
 
   [HttpGet]
   [Route("")]
-  [Produces(typeof(List<VehicleDto>))]
+  [ProducesResponseType(typeof(List<VehicleDto>), StatusCodes.Status200OK)]
   public async Task<IActionResult> GetVehicles(CancellationToken ct)
   {
     var result = await _vehicleService.GetVehiclesAsync(ct);
@@ -26,7 +26,7 @@ public class VehicleController : ControllerBase
 
   [HttpGet]
   [Route("{id}")]
-  [Produces(typeof(VehicleDto))]
+  [ProducesResponseType(typeof(VehicleDto), StatusCodes.Status200OK)]
   public async Task<IActionResult> GetVehicle(Guid id, CancellationToken ct)
   {
     if (!await _vehicleService.VehicleExistsAsync(id, ct))
@@ -40,6 +40,7 @@ public class VehicleController : ControllerBase
 
   [HttpPut]
   [Route("{id}")]
+  [ProducesResponseType(StatusCodes.Status204NoContent)]
   public async Task<IActionResult> UpdateVehicle(Guid id, [FromBody] VehicleDto vehicleDto)
   {
     await _vehicleService.UpdateVehicleAsync(vehicleDto);

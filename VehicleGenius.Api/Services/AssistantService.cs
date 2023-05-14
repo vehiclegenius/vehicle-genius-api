@@ -32,20 +32,4 @@ class AssistantService : IAssistantService
 
     return answer;
   }
-
-  public async Task GivePromptFeedback(GivePromptFeedbackRequestDto requestDto)
-  {
-    var promptFeedback = new PromptFeedback
-    {
-      VehicleId = requestDto.VehicleId,
-      IsPositive = requestDto.IsPositive,
-      Reason = requestDto.Reason,
-      Messages = requestDto.Messages,
-      CreatedAt = DateTime.UtcNow,
-    };
-    
-    _dbContext.PromptFeedbacks.Add(promptFeedback);
-    
-    await _dbContext.SaveChangesAsync();
-  }
 }

@@ -20,7 +20,8 @@ public class SummaryTemplateController : ControllerBase
 
   [HttpGet]
   [Route("current")]
-  public async Task<ActionResult<SummaryTemplateDto>> GetCurrent(CancellationToken ct)
+  [ProducesResponseType(typeof (SummaryTemplateDto), StatusCodes.Status200OK)]
+  public async Task<IActionResult> GetCurrent(CancellationToken ct)
   {
     var answer = await _summaryTemplateService.GetForVersionAsync(1, ct);
     return Ok(answer);
@@ -28,7 +29,8 @@ public class SummaryTemplateController : ControllerBase
 
   [HttpPut]
   [Route("current")]
-  public async Task<ActionResult<SummaryTemplateDto>> UpdateCurrent(
+  [ProducesResponseType(StatusCodes.Status204NoContent)]
+  public async Task<IActionResult> UpdateCurrent(
     [FromBody] SummaryTemplateDto summaryTemplateDto,
     CancellationToken ct)
   {
@@ -38,7 +40,8 @@ public class SummaryTemplateController : ControllerBase
 
   [HttpGet]
   [Route("example")]
-  public async Task<ActionResult<string>> GetExample(CancellationToken ct)
+  [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+  public async Task<IActionResult> GetExample(CancellationToken ct)
   {
     var vehicles = await _vehicleService.GetVehiclesAsync(ct);
     var vehicle = vehicles.FirstOrDefault();
@@ -53,7 +56,8 @@ public class SummaryTemplateController : ControllerBase
 
   [HttpPost]
   [Route("validate")]
-  public async Task<ActionResult<SummaryTemplateValidationResultDto>> Validate(
+  [ProducesResponseType(typeof (SummaryTemplateValidationResultDto), StatusCodes.Status200OK)]
+  public async Task<IActionResult> Validate(
     [FromBody] SummaryTemplateDto summaryTemplateDto,
     CancellationToken ct)
   {
