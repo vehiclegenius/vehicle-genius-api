@@ -2,20 +2,18 @@ using OpenAI.GPT3;
 using OpenAI.GPT3.Managers;
 using OpenAI.GPT3.ObjectModels.RequestModels;
 using VehicleGenius.Api.Dtos;
+using VehicleGenius.Api.Services.SummaryTemplates;
 
 namespace VehicleGenius.Api.Services.AI;
 
 class ChatGptService : IAiService
 {
+  private readonly ISummaryTemplateService _summaryTemplateService;
   private readonly OpenAIService _openAi;
 
-  private readonly string _summaryPromptSystem =
-    "You are a helpful assistant. You take JSON and transform it into a digestible list of data. You don't omit any numbers. Money amounts are in dollars. The prompt may contain further hints.";
-
-  private readonly string _answerPromptSystemTemplate = "You are a helpful assistant.";
-
-  public ChatGptService(IConfiguration configuration)
+  public ChatGptService(IConfiguration configuration, ISummaryTemplateService summaryTemplateService)
   {
+    _summaryTemplateService = summaryTemplateService;
     _openAi = new OpenAIService(new OpenAiOptions()
     {
       ApiKey = configuration.GetValue<string>("OpenAI:ApiKey")!,
@@ -24,18 +22,17 @@ class ChatGptService : IAiService
 
   public async Task<List<ChatMessageDto>> GetAnswer(GetAnswerRequest request)
   {
-    var promptWithData = @$"With this data:
-
-{request.Data}
-
-{request.Messages.Last(m => m.Role == "user").Content}";
+    var summaryTemplate = await _summaryTemplateService.GetForVersionAsync(1, CancellationToken.None);
+    var userPrompt = summaryTemplate.PromptTemplate
+      .Replace("{Data}", request.Data.ToString())
+      .Replace("{UserMessage}", request.Messages.Last(m => m.Role == "user").Content);
 
     var chatCompletionCreateRequest = new ChatCompletionCreateRequest()
     {
       Messages = new List<ChatMessage>()
       {
-        ChatMessage.FromSystem(_answerPromptSystemTemplate),
-        ChatMessage.FromUser(promptWithData),
+        ChatMessage.FromSystem(summaryTemplate.SystemPrompt),
+        ChatMessage.FromUser(userPrompt),
       },
       Model = "gpt-3.5-turbo",
       Temperature = (float)0,

@@ -15,7 +15,9 @@ public class SummaryTemplateMapperService : IMapperService<SummaryTemplate, Summ
   {
     return new SummaryTemplateDto
     {
-      Template = model.Template,
+      PromptTemplate = model.PromptTemplate,
+      DataTemplate = model.DataTemplate,
+      SystemPrompt = model.SystemPrompt,
     };
   }
 }

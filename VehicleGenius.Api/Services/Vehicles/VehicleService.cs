@@ -1,6 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Scriban;
-using Scriban.Runtime;
 using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Models;
 using VehicleGenius.Api.Models.Entities;

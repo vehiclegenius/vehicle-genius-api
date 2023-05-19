@@ -13,6 +13,12 @@ class SummaryTemplateService : ISummaryTemplateService
   private readonly VehicleGeniusDbContext _dbContext;
   private readonly IMapperService<SummaryTemplate, SummaryTemplateDto> _summaryTemplateMapperService;
   private readonly string _defaultTemplate;
+  private readonly string _defaultSystemPrompt = "You are a helpful assistant.";
+  private readonly string _defaultPromptTemplate = @"With this data:
+
+{Data}
+
+{UserMessage}";
 
   public SummaryTemplateService(
     VehicleGeniusDbContext dbContext,
@@ -33,7 +39,9 @@ class SummaryTemplateService : ISummaryTemplateService
       {
         Id = Guid.NewGuid(),
         VinAuditDataVersion = version,
-        Template = _defaultTemplate,
+        SystemPrompt = _defaultSystemPrompt,
+        DataTemplate = _defaultTemplate,
+        PromptTemplate = _defaultPromptTemplate,
         CreatedAt = DateTime.UtcNow,
         UpdatedAt = DateTime.UtcNow,
       };
@@ -52,14 +60,14 @@ class SummaryTemplateService : ISummaryTemplateService
       summaryTemplate = new SummaryTemplate
       {
         VinAuditDataVersion = version,
-        Template = dto.Template,
+        DataTemplate = dto.DataTemplate,
         UpdatedAt = DateTime.UtcNow,
       };
       _dbContext.SummaryTemplates.Add(summaryTemplate);
     }
     else
     {
-      summaryTemplate.Template = dto.Template;
+      summaryTemplate.DataTemplate = dto.DataTemplate;
       summaryTemplate.UpdatedAt = DateTime.UtcNow;
     }
   }
@@ -70,7 +78,7 @@ class SummaryTemplateService : ISummaryTemplateService
   {
     try
     {
-      var liquidTemplate = Template.Parse(summaryTemplateDto.Template);
+      var liquidTemplate = Template.Parse(summaryTemplateDto.DataTemplate);
       
       if (liquidTemplate.HasErrors)
       {
@@ -105,7 +113,7 @@ class SummaryTemplateService : ISummaryTemplateService
 
   public async Task<string> RenderTemplateAsync(SummaryTemplateDto template, Vehicle vehicle, CancellationToken ct)
   {
-    var liquidTemplate = Template.Parse(template.Template);
+    var liquidTemplate = Template.Parse(template.DataTemplate);
     var context = GetTemplateContext(vehicle);
     var interpolated = await liquidTemplate.RenderAsync(context);
     return interpolated;
