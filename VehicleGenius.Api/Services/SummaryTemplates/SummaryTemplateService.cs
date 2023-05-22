@@ -60,16 +60,22 @@ class SummaryTemplateService : ISummaryTemplateService
       summaryTemplate = new SummaryTemplate
       {
         VinAuditDataVersion = version,
+        SystemPrompt = dto.SystemPrompt,
         DataTemplate = dto.DataTemplate,
+        PromptTemplate = dto.PromptTemplate,
         UpdatedAt = DateTime.UtcNow,
       };
       _dbContext.SummaryTemplates.Add(summaryTemplate);
     }
     else
     {
+      summaryTemplate.SystemPrompt = dto.SystemPrompt;
       summaryTemplate.DataTemplate = dto.DataTemplate;
+      summaryTemplate.PromptTemplate = dto.PromptTemplate;
       summaryTemplate.UpdatedAt = DateTime.UtcNow;
     }
+
+    await _dbContext.SaveChangesAsync(ct);
   }
 
   public async Task<SummaryTemplateValidationResultDto> ValidateAsync(
