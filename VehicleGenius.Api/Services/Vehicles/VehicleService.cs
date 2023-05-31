@@ -32,9 +32,17 @@ class VehicleService : IVehicleService
     return await _dbContext.Vehicles.AnyAsync(v => v.Id == vehicleId, ct);
   }
 
-  public async Task<List<VehicleDto>> GetVehiclesAsync(CancellationToken ct)
+  public async Task<bool> UserOwnsVehicleAsync(Guid vehicleId, string username, CancellationToken ct)
   {
-    var models = await GetQueryable().ToListAsync(ct);
+    return await _dbContext.Vehicles.AnyAsync(
+      v => v.Id == vehicleId &&
+           v.UserVehicles.Any(uv => uv.User.Username == username),
+      ct);
+  }
+
+  public async Task<List<VehicleDto>> GetVehiclesAsync(string username, CancellationToken ct)
+  {
+    var models = await GetQueryable().Where(v => v.UserVehicles.Any(uv => uv.User.Username == username)).ToListAsync(ct);
     var dtos = models.Select(_vehicleMapperService.MapToDto).ToList();
     return dtos;
   }
@@ -69,6 +77,43 @@ class VehicleService : IVehicleService
       _dbContext.Add(model);
     }
 
+    await _dbContext.SaveChangesAsync();
+  }
+
+  public async Task AssignVehicleToUserAsync(string username, Guid vehicleId)
+  {
+    var user = _dbContext.Users
+      .Include(u => u.UserVehicles)
+      .FirstOrDefault(u => u.Username == username);
+    
+    if (user == null)
+    {
+      var userId = Guid.NewGuid();
+      user = new User
+      {
+        Id = userId,
+        Username = username,
+        UserVehicles = new List<UserVehicle>()
+        {
+          new()
+          {
+            UserId = userId,
+            VehicleId = vehicleId,
+          },
+        },
+      };
+      _dbContext.Add(user);
+    }
+    else if (user.UserVehicles.All(uv => uv.VehicleId != vehicleId))
+    {
+      user.UserVehicles.Add(new UserVehicle
+      {
+        UserId = user.Id,
+        VehicleId = vehicleId,
+      });
+      _dbContext.Update(user);
+    }
+    
     await _dbContext.SaveChangesAsync();
   }
 

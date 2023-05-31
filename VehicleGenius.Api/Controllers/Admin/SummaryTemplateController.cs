@@ -38,22 +38,6 @@ public class SummaryTemplateController : ControllerBase
     return NoContent();
   }
 
-  [HttpGet]
-  [Route("example")]
-  [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-  public async Task<IActionResult> GetExample(CancellationToken ct)
-  {
-    var vehicles = await _vehicleService.GetVehiclesAsync(ct);
-    var vehicle = vehicles.FirstOrDefault();
-    if (vehicle is null)
-    {
-      return NotFound("No vehicles");
-    }
-
-    var summary = await _vehicleService.GetVehicleSummaryAsync(vehicle.Id, ct);
-    return Ok(summary);
-  }
-
   [HttpPost]
   [Route("validate")]
   [ProducesResponseType(typeof (SummaryTemplateValidationResultDto), StatusCodes.Status200OK)]

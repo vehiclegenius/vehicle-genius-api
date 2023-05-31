@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VehicleGenius.Api.Dtos;
@@ -14,9 +15,11 @@ using VehicleGenius.Api.Services.Vehicles.VinAudit;
 namespace VehicleGenius.Api.Migrations
 {
     [DbContext(typeof(VehicleGeniusDbContext))]
-    partial class VehicleGeniusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230530204031_AddUserVehiclesToVehicles")]
+    partial class AddUserVehiclesToVehicles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,7 +115,7 @@ namespace VehicleGenius.Api.Migrations
                     b.Property<Guid>("VehicleId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("UserId", "VehicleId");
+                    b.HasIndex("UserId");
 
                     b.HasIndex("VehicleId");
 
@@ -155,13 +158,13 @@ namespace VehicleGenius.Api.Migrations
             modelBuilder.Entity("VehicleGenius.Api.Models.Entities.UserVehicle", b =>
                 {
                     b.HasOne("VehicleGenius.Api.Models.Entities.User", "User")
-                        .WithMany("UserVehicles")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("VehicleGenius.Api.Models.Entities.Vehicle", "Vehicle")
-                        .WithMany("UserVehicles")
+                        .WithMany()
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -169,16 +172,6 @@ namespace VehicleGenius.Api.Migrations
                     b.Navigation("User");
 
                     b.Navigation("Vehicle");
-                });
-
-            modelBuilder.Entity("VehicleGenius.Api.Models.Entities.User", b =>
-                {
-                    b.Navigation("UserVehicles");
-                });
-
-            modelBuilder.Entity("VehicleGenius.Api.Models.Entities.Vehicle", b =>
-                {
-                    b.Navigation("UserVehicles");
                 });
 #pragma warning restore 612, 618
         }

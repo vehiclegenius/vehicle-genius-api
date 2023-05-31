@@ -18,18 +18,19 @@ public class VehicleController : ControllerBase
   [HttpGet]
   [Route("")]
   [ProducesResponseType(typeof(List<VehicleDto>), StatusCodes.Status200OK)]
-  public async Task<IActionResult> GetVehicles(CancellationToken ct)
+  public async Task<IActionResult> GetVehicles(string username, CancellationToken ct)
   {
-    var result = await _vehicleService.GetVehiclesAsync(ct);
+    var result = await _vehicleService.GetVehiclesAsync(username, ct);
     return Ok(result);
   }
 
   [HttpGet]
   [Route("{id}")]
   [ProducesResponseType(typeof(VehicleDto), StatusCodes.Status200OK)]
-  public async Task<IActionResult> GetVehicle(Guid id, CancellationToken ct)
+  public async Task<IActionResult> GetVehicle(Guid id, string username, CancellationToken ct)
   {
-    if (!await _vehicleService.VehicleExistsAsync(id, ct))
+    if (!await _vehicleService.VehicleExistsAsync(id, ct) ||
+        !await _vehicleService.UserOwnsVehicleAsync(id, username, ct))
     {
       return NotFound();
     }
@@ -41,9 +42,10 @@ public class VehicleController : ControllerBase
   [HttpPut]
   [Route("{id}")]
   [ProducesResponseType(StatusCodes.Status204NoContent)]
-  public async Task<IActionResult> UpdateVehicle(Guid id, [FromBody] VehicleDto vehicleDto)
+  public async Task<IActionResult> UpdateVehicle(Guid id, string username, [FromBody] VehicleDto vehicleDto)
   {
     await _vehicleService.UpdateVehicleAsync(vehicleDto);
+    await _vehicleService.AssignVehicleToUserAsync(username, id);
     return NoContent();
   }
 }
