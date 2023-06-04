@@ -41,11 +41,11 @@ public class VehicleController : ControllerBase
 
   [HttpPut]
   [Route("{id}")]
-  [ProducesResponseType(StatusCodes.Status204NoContent)]
+  [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
   public async Task<IActionResult> UpdateVehicle(Guid id, string username, [FromBody] VehicleDto vehicleDto)
   {
-    await _vehicleService.UpsertVehicleAsync(vehicleDto);
-    await _vehicleService.AssignVehicleToUserAsync(username, id);
-    return NoContent();
+    var vehicle = await _vehicleService.UpsertVehicleAsync(vehicleDto);
+    await _vehicleService.AssignVehicleToUserAsync(username, vehicle.Id);
+    return Ok(vehicle.Id);
   }
 }

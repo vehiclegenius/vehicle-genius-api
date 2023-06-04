@@ -64,7 +64,7 @@ class VehicleService : IVehicleService
     return interpolated;
   }
 
-  public async Task UpsertVehicleAsync(VehicleDto vehicleDto)
+  public async Task<Vehicle> UpsertVehicleAsync(VehicleDto vehicleDto)
   {
     var model = _vehicleMapperService.MapToModel(vehicleDto);
 
@@ -98,6 +98,8 @@ class VehicleService : IVehicleService
     }
 
     await _dbContext.SaveChangesAsync();
+
+    return model;
   }
 
   public async Task AssignVehicleToUserAsync(string username, Guid vehicleId)

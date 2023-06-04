@@ -1,4 +1,5 @@
 using VehicleGenius.Api.Dtos;
+using VehicleGenius.Api.Models.Entities;
 
 namespace VehicleGenius.Api.Services.Vehicles;
 
@@ -9,6 +10,6 @@ public interface IVehicleService
   Task<List<VehicleDto>> GetVehiclesAsync(string username, CancellationToken ct);
   Task<VehicleDto> GetSingleVehicleAsync(Guid vehicleId, CancellationToken ct);
   Task<string> GetVehicleSummaryAsync(Guid vehicleId, CancellationToken ct);
-  Task UpsertVehicleAsync(VehicleDto vehicleDto);
+  Task<Vehicle> UpsertVehicleAsync(VehicleDto vehicleDto);
   Task AssignVehicleToUserAsync(string username, Guid vehicleId);
 }
