@@ -44,7 +44,7 @@ public class VehicleController : ControllerBase
   [ProducesResponseType(StatusCodes.Status204NoContent)]
   public async Task<IActionResult> UpdateVehicle(Guid id, string username, [FromBody] VehicleDto vehicleDto)
   {
-    await _vehicleService.UpdateVehicleAsync(vehicleDto);
+    await _vehicleService.UpsertVehicleAsync(vehicleDto);
     await _vehicleService.AssignVehicleToUserAsync(username, id);
     return NoContent();
   }

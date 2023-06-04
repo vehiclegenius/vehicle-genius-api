@@ -42,7 +42,9 @@ class VehicleService : IVehicleService
 
   public async Task<List<VehicleDto>> GetVehiclesAsync(string username, CancellationToken ct)
   {
-    var models = await GetQueryable().Where(v => v.UserVehicles.Any(uv => uv.User.Username == username)).ToListAsync(ct);
+    var models = await GetQueryable()
+      .Where(v => v.UserVehicles.Any(uv => uv.User.Username == username))
+      .ToListAsync(ct);
     var dtos = models.Select(_vehicleMapperService.MapToDto).ToList();
     return dtos;
   }
@@ -62,12 +64,30 @@ class VehicleService : IVehicleService
     return interpolated;
   }
 
-  public async Task UpdateVehicleAsync(VehicleDto vehicleDto)
+  public async Task UpsertVehicleAsync(VehicleDto vehicleDto)
   {
     var model = _vehicleMapperService.MapToModel(vehicleDto);
 
-    if (await _dbContext.Vehicles.AnyAsync(v => v.Id == model.Id))
+    var existingVehicle = await _dbContext.Vehicles
+      .AsNoTracking()
+      .FirstOrDefaultAsync(v => v.Id == model.Id || v.Vin == model.Vin);
+
+    // If the ID exists, then we're updating an existing vehicle.  Update it
+    // with new data.
+    // If the ID doesn't exist, but the VIN does, then we're trying to insert a
+    // duplicate.  Update the existing vehicle with freshly fetched data and
+    // save.
+    // Otherwise, we're inserting a new vehicle.  Save it.
+
+    if (existingVehicle?.Id == model.Id)
     {
+      _dbContext.Update(model);
+    }
+    else if (existingVehicle?.Vin == model.Vin)
+    {
+      model.Id = existingVehicle.Id;
+      model.VinAuditData = await _vinAuditService.GetVinAuditData(new VinAuditPromptData() { Vin = model.Vin });
+      model.VinAuditDataVersion = 1;
       _dbContext.Update(model);
     }
     else
@@ -85,7 +105,7 @@ class VehicleService : IVehicleService
     var user = _dbContext.Users
       .Include(u => u.UserVehicles)
       .FirstOrDefault(u => u.Username == username);
-    
+
     if (user == null)
     {
       var userId = Guid.NewGuid();
@@ -113,7 +133,7 @@ class VehicleService : IVehicleService
       });
       _dbContext.Update(user);
     }
-    
+
     await _dbContext.SaveChangesAsync();
   }
 
