@@ -7,6 +7,7 @@ using VehicleGenius.Api.Services.Consumers;
 using VehicleGenius.Api.Services.Mappers;
 using VehicleGenius.Api.Services.PromptFeedback;
 using VehicleGenius.Api.Services.SummaryTemplates;
+using VehicleGenius.Api.Services.Users;
 using VehicleGenius.Api.Services.Vehicles;
 using VehicleGenius.Api.Services.Vehicles.VinAudit;
 using VehicleGenius.Api.Startup.Mq;
@@ -37,10 +38,14 @@ public class VehicleGeniusModule : Module
   {
     containerBuilder.RegisterType<PromptFeedbackMapperService>()
       .As<IMapperService<PromptFeedback, PromptFeedbackDto>>();
-    containerBuilder.RegisterType<VehicleMapperService>()
-      .As<IMapperService<Vehicle, VehicleDto>>();
     containerBuilder.RegisterType<SummaryTemplateMapperService>()
       .As<IMapperService<SummaryTemplate, SummaryTemplateDto>>();
+    containerBuilder.RegisterType<UserMapperService>()
+      .As<IMapperService<User, UserDto>>();
+    containerBuilder.RegisterType<UserVehicleMapperService>()
+      .As<IMapperService<UserVehicle, UserVehicleDto>>();
+    containerBuilder.RegisterType<VehicleMapperService>()
+      .As<IMapperService<Vehicle, VehicleDto>>();
   }
 
   private static void RegisterApplicationServices(ContainerBuilder containerBuilder)
@@ -49,6 +54,7 @@ public class VehicleGeniusModule : Module
     containerBuilder.RegisterType<ChatGptService>().As<IAiService>();
     containerBuilder.RegisterType<PromptFeedbackService>().As<IPromptFeedbackService>();
     containerBuilder.RegisterType<SummaryTemplateService>().As<ISummaryTemplateService>();
+    containerBuilder.RegisterType<UserService>().As<IUserService>();
     containerBuilder.RegisterType<VehicleService>().As<IVehicleService>();
     containerBuilder.RegisterType<VinAuditService>().As<IVinAuditService>();
   }
