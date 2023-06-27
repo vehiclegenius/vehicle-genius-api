@@ -12,6 +12,7 @@ class VehicleMapperService : IMapperService<Vehicle, VehicleDto>
     {
       Id = dto.Id,
       Vin = dto.Vin,
+      UserData = dto.UserData,
     };
   }
 
@@ -22,6 +23,7 @@ class VehicleMapperService : IMapperService<Vehicle, VehicleDto>
       Id = model.Id,
       Vin = model.Vin,
       VinAuditData = model.VinAuditData,
+      UserData = model.UserData,
     };
   }
 }

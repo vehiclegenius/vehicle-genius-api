@@ -73,28 +73,30 @@ class VehicleService : IVehicleService
       .FirstOrDefaultAsync(v => v.Id == model.Id || v.Vin == model.Vin);
 
     // If the ID exists, then we're updating an existing vehicle.  Update it
-    // with new data.
+    // with select new data.
     // If the ID doesn't exist, but the VIN does, then we're trying to insert a
-    // duplicate.  Update the existing vehicle with freshly fetched data and
+    // duplicate.  Duplicate the existing vehicle with freshly fetched data and
     // save.
     // Otherwise, we're inserting a new vehicle.  Save it.
 
     if (existingVehicle?.Id == model.Id)
     {
-      _dbContext.Update(model);
-    }
-    else if (existingVehicle?.Vin == model.Vin)
-    {
-      model.Id = existingVehicle.Id;
-      model.VinAuditData = await _vinAuditService.GetVinAuditData(new VinAuditPromptData() { Vin = model.Vin });
-      model.VinAuditDataVersion = 1;
-      _dbContext.Update(model);
+      existingVehicle.UserData = model.UserData;
+      _dbContext.Update(existingVehicle);
     }
     else
     {
       model.VinAuditData = await _vinAuditService.GetVinAuditData(new VinAuditPromptData() { Vin = model.Vin });
       model.VinAuditDataVersion = 1;
-      _dbContext.Add(model);
+
+      if (existingVehicle?.Vin == model.Vin)
+      {
+        _dbContext.Update(model);
+      }
+      else
+      {
+        _dbContext.Add(model);
+      }
     }
 
     await _dbContext.SaveChangesAsync();
