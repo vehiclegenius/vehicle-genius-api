@@ -88,15 +88,8 @@ class VehicleService : IVehicleService
     {
       model.VinAuditData = await _vinAuditService.GetVinAuditData(new VinAuditPromptData() { Vin = model.Vin });
       model.VinAuditDataVersion = 1;
-
-      if (existingVehicle?.Vin == model.Vin)
-      {
-        _dbContext.Update(model);
-      }
-      else
-      {
-        _dbContext.Add(model);
-      }
+      model.UserData = new VehicleUserDataDto();
+      _dbContext.Add(model);
     }
 
     await _dbContext.SaveChangesAsync();
