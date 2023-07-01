@@ -14,6 +14,7 @@ class SummaryTemplateService : ISummaryTemplateService
   private readonly IMapperService<SummaryTemplate, SummaryTemplateDto> _summaryTemplateMapperService;
   private readonly string _defaultTemplate;
   private readonly string _defaultSystemPrompt = "You are a helpful assistant.";
+
   private readonly string _defaultPromptTemplate = @"With this data:
 
 {Data}
@@ -85,7 +86,7 @@ class SummaryTemplateService : ISummaryTemplateService
     try
     {
       var liquidTemplate = Template.Parse(summaryTemplateDto.DataTemplate);
-      
+
       if (liquidTemplate.HasErrors)
       {
         return new SummaryTemplateValidationResultDto
@@ -95,7 +96,7 @@ class SummaryTemplateService : ISummaryTemplateService
           Preview = "",
         };
       }
-      
+
       var vehicle = await _dbContext.Vehicles.FirstOrDefaultAsync(ct);
 
       return new SummaryTemplateValidationResultDto()
@@ -114,7 +115,6 @@ class SummaryTemplateService : ISummaryTemplateService
         Preview = "",
       };
     }
-    
   }
 
   public async Task<string> RenderTemplateAsync(SummaryTemplateDto template, Vehicle vehicle, CancellationToken ct)
@@ -127,36 +127,62 @@ class SummaryTemplateService : ISummaryTemplateService
 
   private static TemplateContext GetTemplateContext(Vehicle? vehicle)
   {
-    var specificationsAttributesScriptObject = new ScriptObject();
-    specificationsAttributesScriptObject.Import(vehicle.VinAuditData.Specifications.Attributes,
-      renamer: member => member.Name);
+    var scriptObject = new ScriptObject
+    {
+      { "Specifications", GetSpecificationsScriptObject(vehicle) },
+      { "MarketValue", GetMarketValueScriptObject(vehicle) },
+      { "OwnershipCost", GetOwnershipCostsScriptObject(vehicle) },
+      { "UserData", GetUserDataScriptObject(vehicle) },
+    };
 
-    var specificationsScriptObject = new ScriptObject();
-    specificationsScriptObject.Add("Attributes", specificationsAttributesScriptObject);
-    
-    var ownershipCostsScriptObject = new ScriptObject();
-    ownershipCostsScriptObject.Import(vehicle.VinAuditData.OwnershipCost,
-      renamer: member => member.Name);
-    
-    var marketValuePricesScriptObject = new ScriptObject();
-    marketValuePricesScriptObject.Import(vehicle.VinAuditData.MarketValue.Prices,
-      renamer: member => member.Name);
-    
-    var marketValueScriptObject = new ScriptObject();
-    marketValueScriptObject.Import(vehicle.VinAuditData.MarketValue,
-      renamer: member => member.Name);
-    marketValueScriptObject.Remove("Prices");
-    marketValueScriptObject.Add("Prices", marketValuePricesScriptObject);
-
-    var scriptObject = new ScriptObject();
-    scriptObject.Add("Specifications", specificationsScriptObject);
-    scriptObject.Add("MarketValue", marketValueScriptObject);
-    scriptObject.Add("OwnershipCost", ownershipCostsScriptObject);
-    
     var context = new TemplateContext();
     context.PushGlobal(scriptObject);
 
     return context;
+  }
+
+  private static ScriptObject GetSpecificationsScriptObject(Vehicle? vehicle)
+  {
+    var specificationsAttributesScriptObject = new ScriptObject();
+    specificationsAttributesScriptObject.Import(vehicle.VinAuditData.Specifications.Attributes,
+      renamer: ScriptObjectRenamer());
+
+    var specificationsScriptObject = new ScriptObject();
+    specificationsScriptObject.Add("Attributes", specificationsAttributesScriptObject);
+
+    return specificationsScriptObject;
+  }
+
+  private static ScriptObject GetMarketValueScriptObject(Vehicle vehicle)
+  {
+    var marketValuePricesScriptObject = new ScriptObject();
+    marketValuePricesScriptObject.Import(vehicle.VinAuditData.MarketValue.Prices, renamer: ScriptObjectRenamer());
+
+    var marketValueScriptObject = new ScriptObject();
+    marketValueScriptObject.Import(vehicle.VinAuditData.MarketValue, renamer: ScriptObjectRenamer());
+    marketValueScriptObject.Remove("Prices");
+    marketValueScriptObject.Add("Prices", marketValuePricesScriptObject);
+
+    return marketValueScriptObject;
+  }
+
+  private static ScriptObject GetOwnershipCostsScriptObject(Vehicle vehicle)
+  {
+    var scriptObject = new ScriptObject();
+    scriptObject.Import(vehicle.VinAuditData.OwnershipCost, renamer: ScriptObjectRenamer());
+    return scriptObject;
+  }
+
+  private static object GetUserDataScriptObject(Vehicle vehicle)
+  {
+    var scriptObject = new ScriptObject();
+    scriptObject.Import(vehicle.UserData, renamer: ScriptObjectRenamer());
+    return scriptObject;
+  }
+
+  private static MemberRenamerDelegate ScriptObjectRenamer()
+  {
+    return member => member.Name;
   }
 
   private async Task<SummaryTemplate?> GetLastUpdatedForVersionAsync(int version, CancellationToken ct)
