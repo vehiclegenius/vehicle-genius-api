@@ -1,5 +1,6 @@
 using Autofac;
 using VehicleGenius.Api.Dtos;
+using VehicleGenius.Api.Jobs;
 using VehicleGenius.Api.Models.Entities;
 using VehicleGenius.Api.Services;
 using VehicleGenius.Api.Services.AI;
@@ -32,6 +33,7 @@ public class VehicleGeniusModule : Module
     RegisterStartupServices(containerBuilder);
     RegisterQueueServices(containerBuilder);
     RegisterConsumers(containerBuilder);
+    RegisterJobs(containerBuilder);
   }
 
   private static void RegisterMapperServices(ContainerBuilder containerBuilder)
@@ -81,5 +83,10 @@ public class VehicleGeniusModule : Module
   {
     containerBuilder.RegisterType<LoggerConsumer>()
       .AsSelf();
+  }
+
+  private static void RegisterJobs(ContainerBuilder containerBuilder)
+  {
+    containerBuilder.RegisterType<SyncVehicleDataJob>().AsSelf();
   }
 }
