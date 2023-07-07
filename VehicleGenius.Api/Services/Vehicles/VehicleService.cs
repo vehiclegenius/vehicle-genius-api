@@ -82,12 +82,12 @@ class VehicleService : IVehicleService
     if (existingVehicle?.Id == model.Id)
     {
       existingVehicle.UserData = model.UserData;
+      existingVehicle.UpdatedAt = DateTime.UtcNow;
       _dbContext.Update(existingVehicle);
     }
     else
     {
-      model.VinAuditData = await _vinAuditService.GetVinAuditData(new VinAuditPromptData() { Vin = model.Vin });
-      model.VinAuditDataVersion = 1;
+      await PopulateVehicleWithLatestDataAsync(_dbContext, model, CancellationToken.None);
       model.UserData = new VehicleUserDataDto();
       _dbContext.Add(model);
     }
@@ -132,6 +132,29 @@ class VehicleService : IVehicleService
     }
 
     await _dbContext.SaveChangesAsync();
+  }
+
+  public async Task SyncVehicleDataAsync(Guid vehicleId, CancellationToken ct)
+  {
+    var vehicle = await GetQueryable()
+      .AsTracking()
+      .FirstOrDefaultAsync(v => v.Id == vehicleId, ct);
+
+    if (vehicle == null)
+    {
+      return;
+    }
+
+    await PopulateVehicleWithLatestDataAsync(_dbContext, vehicle, ct);
+
+    await _dbContext.SaveChangesAsync();
+  }
+
+  private async Task PopulateVehicleWithLatestDataAsync(VehicleGeniusDbContext context, Vehicle vehicle, CancellationToken ct)
+  {
+    vehicle.DataUpdatedAt = DateTime.UtcNow;
+    vehicle.VinAuditData = await _vinAuditService.GetVinAuditData(
+      new VinAuditPromptData() { Vin = vehicle.Vin });
   }
 
   private IQueryable<Vehicle> GetQueryable()

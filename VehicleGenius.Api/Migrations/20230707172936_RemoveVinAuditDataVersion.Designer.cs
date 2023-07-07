@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VehicleGenius.Api.Dtos;
@@ -14,9 +15,11 @@ using VehicleGenius.Api.Services.Vehicles.VinAudit;
 namespace VehicleGenius.Api.Migrations
 {
     [DbContext(typeof(VehicleGeniusDbContext))]
-    partial class VehicleGeniusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230707172936_RemoveVinAuditDataVersion")]
+    partial class RemoveVinAuditDataVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,12 +127,6 @@ namespace VehicleGenius.Api.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<DateTime>("DataUpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<VehicleUserDataDto>("UserData")
                         .IsRequired()

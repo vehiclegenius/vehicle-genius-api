@@ -12,4 +12,5 @@ public interface IVehicleService
   Task<string> GetVehicleSummaryAsync(Guid vehicleId, CancellationToken ct);
   Task<Vehicle> UpsertVehicleAsync(VehicleDto vehicleDto);
   Task AssignVehicleToUserAsync(string username, Guid vehicleId);
+  Task SyncVehicleDataAsync(Guid vehicleId, CancellationToken ct);
 }
