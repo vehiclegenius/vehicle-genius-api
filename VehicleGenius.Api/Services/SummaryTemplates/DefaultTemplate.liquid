@@ -78,3 +78,11 @@ Vehicle's ownership cost data:
   - ${{ cost }}
 {{ end ~}}
 - Estimated 5-year total cost: ${{ OwnershipCost.TotalCostSum }}
+
+User-inputted data (0 or 01/01/0001 means no data):
+- Insurance rate ($): {{ UserData.InsuranceRate }}
+- Insurance provider: {{ UserData.InsuranceProvider }}
+- Insurance renewal date: {{ UserData.InsuranceRenewalDate }}
+- Financing interest rate ($): {{ UserData.FinancingInterestRate }}
+- Financing term end: {{ UserData.FinancingTermEnd }}
+- Previous maintenance data: {{ UserData.PreviousMaintenanceData }}
