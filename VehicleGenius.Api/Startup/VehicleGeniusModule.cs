@@ -5,6 +5,7 @@ using VehicleGenius.Api.Models.Entities;
 using VehicleGenius.Api.Services;
 using VehicleGenius.Api.Services.AI;
 using VehicleGenius.Api.Services.Consumers;
+using VehicleGenius.Api.Services.DIMO;
 using VehicleGenius.Api.Services.Mappers;
 using VehicleGenius.Api.Services.PromptFeedback;
 using VehicleGenius.Api.Services.SummaryTemplates;
@@ -54,6 +55,7 @@ public class VehicleGeniusModule : Module
   {
     containerBuilder.RegisterType<AssistantService>().As<IAssistantService>();
     containerBuilder.RegisterType<ChatGptService>().As<IAiService>();
+    containerBuilder.RegisterType<DimoApi>().As<IDimoApi>();
     containerBuilder.RegisterType<PromptFeedbackService>().As<IPromptFeedbackService>();
     containerBuilder.RegisterType<SummaryTemplateService>().As<ISummaryTemplateService>();
     containerBuilder.RegisterType<UserService>().As<IUserService>();
