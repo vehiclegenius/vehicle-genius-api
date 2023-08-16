@@ -22,4 +22,5 @@ public record SharedDevice
 {
   public string Vin { get; set; }
   public string NftTokenId { get; set; }
+  public DimoVehicleStatus? DeviceStatus { get; set; }
 }

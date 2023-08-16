@@ -14,6 +14,7 @@ public class ProgramJobFactory : IProgramJobFactory
     return jobName switch
     {
       SyncVehicleDataJob.Name => _serviceProvider.GetRequiredService<SyncVehicleDataJob>(),
+      SyncVehicleStatusJob.Name => _serviceProvider.GetRequiredService<SyncVehicleStatusJob>(),
       _ => throw new ArgumentException($"Invalid job name: {jobName}")
     };
   }

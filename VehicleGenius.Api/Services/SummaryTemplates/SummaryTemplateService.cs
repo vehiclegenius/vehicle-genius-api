@@ -133,6 +133,7 @@ class SummaryTemplateService : ISummaryTemplateService
       { "MarketValue", GetMarketValueScriptObject(vehicle) },
       { "OwnershipCost", GetOwnershipCostsScriptObject(vehicle) },
       { "UserData", GetUserDataScriptObject(vehicle) },
+      { "DeviceStatus", GetDeviceStatusScriptObject(vehicle) },
     };
 
     var context = new TemplateContext();
@@ -177,6 +178,13 @@ class SummaryTemplateService : ISummaryTemplateService
   {
     var scriptObject = new ScriptObject();
     scriptObject.Import(vehicle.UserData, renamer: ScriptObjectRenamer());
+    return scriptObject;
+  }
+
+  private static object GetDeviceStatusScriptObject(Vehicle vehicle)
+  {
+    var scriptObject = new ScriptObject();
+    scriptObject.Import(vehicle.DimoVehicleStatus, renamer: ScriptObjectRenamer());
     return scriptObject;
   }
 

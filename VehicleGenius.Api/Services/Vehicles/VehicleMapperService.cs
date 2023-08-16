@@ -24,6 +24,7 @@ class VehicleMapperService : IMapperService<Vehicle, VehicleDto>
       Vin = model.Vin,
       VinAuditData = model.VinAuditData,
       UserData = model.UserData,
+      DeviceStatus = model.DimoVehicleStatus,
     };
   }
 }

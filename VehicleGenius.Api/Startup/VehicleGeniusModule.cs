@@ -89,6 +89,7 @@ public class VehicleGeniusModule : Module
 
   private static void RegisterJobs(ContainerBuilder containerBuilder)
   {
+    containerBuilder.RegisterType<SyncVehicleStatusJob>().AsSelf();
     containerBuilder.RegisterType<SyncVehicleDataJob>().AsSelf();
   }
 }
