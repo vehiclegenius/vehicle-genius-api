@@ -16,4 +16,6 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+export PATH="$PATH:$HOME/.dotnet"
+
 dotnet run --launch-profile $1
