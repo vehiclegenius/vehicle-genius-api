@@ -44,6 +44,26 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "SyncVehicleStatus": {
+      "commandName": "Project",
+      "commandLineArgs": "SyncVehicleStatus",
+      "dotnetRunMessages": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5169",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "GetAccessTokens": {
+      "commandName": "Project",
+      "commandLineArgs": "GetAccessTokens",
+      "dotnetRunMessages": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5169",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "SyncVehicleData Production": {
       "commandName": "Project",
       "commandLineArgs": "SyncVehicleData",

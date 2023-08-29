@@ -16,11 +16,13 @@ public record SharedDevicesResponseSharedDevice
 public record SharedDevicesResponseSharedDeviceNft
 {
   [JsonPropertyName("tokenId")] public string TokenId { get; set; }
+  [JsonPropertyName("ownerAddress")] public string OwnerAddress { get; set; }
 }
 
 public record SharedDevice
 {
   public string Vin { get; set; }
   public string NftTokenId { get; set; }
+  public string OwnerAddress { get; set; }
   public DimoVehicleStatus? DeviceStatus { get; set; }
 }

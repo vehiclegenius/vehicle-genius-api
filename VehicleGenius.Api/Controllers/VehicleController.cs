@@ -48,4 +48,18 @@ public class VehicleController : ControllerBase
     await _vehicleService.AssignVehicleToUserAsync(username, vehicle.Id);
     return Ok(vehicle.Id);
   }
+
+  [HttpPost]
+  [Route("{vin}/fetch-dimo")]
+  [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+  public async Task<IActionResult> FetchDimoData(string vin, string username, CancellationToken ct)
+  {
+    if (await _vehicleService.VehicleExistsAsync(vin, ct))
+    {
+      return Ok();
+    }
+
+    await _vehicleService.FetchDimoDataAsync(vin, username, ct);
+    return Ok();
+  }
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Models;
 using VehicleGenius.Api.Models.Entities;
+using VehicleGenius.Api.Services.DIMO;
 using VehicleGenius.Api.Services.Mappers;
 using VehicleGenius.Api.Services.SummaryTemplates;
 using VehicleGenius.Api.Services.Vehicles.VinAudit;
@@ -14,17 +15,25 @@ class VehicleService : IVehicleService
   private readonly IMapperService<Vehicle, VehicleDto> _vehicleMapperService;
   private readonly IVinAuditService _vinAuditService;
   private readonly ISummaryTemplateService _summaryTemplateService;
+  private readonly IDimoApi _dimoApi;
 
   public VehicleService(
     VehicleGeniusDbContext dbContext,
     IMapperService<Vehicle, VehicleDto> vehicleMapperService,
     IVinAuditService vinAuditService,
-    ISummaryTemplateService summaryTemplateService)
+    ISummaryTemplateService summaryTemplateService,
+    IDimoApi dimoApi)
   {
     _dbContext = dbContext;
     _vehicleMapperService = vehicleMapperService;
     _vinAuditService = vinAuditService;
     _summaryTemplateService = summaryTemplateService;
+    _dimoApi = dimoApi;
+  }
+
+  public async Task<bool> VehicleExistsAsync(string vin, CancellationToken ct)
+  {
+    return await _dbContext.Vehicles.AnyAsync(v => v.Vin == vin, ct);
   }
 
   public async Task<bool> VehicleExistsAsync(Guid vehicleId, CancellationToken ct)
@@ -36,14 +45,14 @@ class VehicleService : IVehicleService
   {
     return await _dbContext.Vehicles.AnyAsync(
       v => v.Id == vehicleId &&
-           v.UserVehicles.Any(uv => uv.User.Username == username),
+           v.UserVehicles.Any(uv => uv.User.Username.ToLower() == username.ToLower()),
       ct);
   }
 
   public async Task<List<VehicleDto>> GetVehiclesAsync(string username, CancellationToken ct)
   {
     var models = await GetQueryable()
-      .Where(v => v.UserVehicles.Any(uv => uv.User.Username == username))
+      .Where(v => v.UserVehicles.Any(uv => uv.User.Username.ToLower() == username.ToLower()))
       .ToListAsync(ct);
     var dtos = models.Select(_vehicleMapperService.MapToDto).ToList();
     return dtos;
@@ -97,7 +106,7 @@ class VehicleService : IVehicleService
     return model;
   }
 
-  public async Task AssignVehicleToUserAsync(string username, Guid vehicleId)
+  public void AssignVehicleToUserAsync(VehicleGeniusDbContext context, string username, Guid vehicleId)
   {
     var user = _dbContext.Users
       .Include(u => u.UserVehicles)
@@ -130,7 +139,11 @@ class VehicleService : IVehicleService
       });
       _dbContext.Update(user);
     }
+  }
 
+  public async Task AssignVehicleToUserAsync(string username, Guid vehicleId)
+  {
+    AssignVehicleToUserAsync(_dbContext, username, vehicleId);
     await _dbContext.SaveChangesAsync();
   }
 
@@ -160,5 +173,33 @@ class VehicleService : IVehicleService
   private IQueryable<Vehicle> GetQueryable()
   {
     return _dbContext.Vehicles;
+  }
+
+  async Task IVehicleService.FetchDimoDataAsync(string vin, string username, CancellationToken ct)
+  {
+    var sharedDevice = await _dimoApi.GetVehicleStatusAsync(vin, ct);
+
+    var vehicle = await GetQueryable()
+      .FirstOrDefaultAsync(v => v.Vin == vin, ct);
+
+    if (vehicle == null)
+    {
+      vehicle = new Vehicle
+      {
+        Id = Guid.NewGuid(),
+        Vin = vin,
+        DimoVehicleStatus = sharedDevice.DeviceStatus,
+      };
+      _dbContext.Add(vehicle);
+    }
+    else
+    {
+      vehicle.DimoVehicleStatus = sharedDevice.DeviceStatus;
+      _dbContext.Update(vehicle);
+    }
+
+    await AssignVehicleToUserAsync(sharedDevice.OwnerAddress, vehicle.Id);
+
+    await _dbContext.SaveChangesAsync();
   }
 }

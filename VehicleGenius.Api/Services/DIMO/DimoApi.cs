@@ -86,16 +86,17 @@ class DimoApi : IDimoApi
     {
       Vin = sd.Vin,
       NftTokenId = sd.Nft.TokenId,
+      OwnerAddress = sd.Nft.OwnerAddress.ToLower(),
     }).ToList();
   }
 
-  private async Task<string> GetDimoAccessToken(CancellationToken ct)
+  public async Task<string> GetDimoAccessToken(CancellationToken ct)
   {
     if (_tokenExpiresAt > DateTime.UtcNow && _accessToken != null)
     {
       return _accessToken;
     }
-    
+
     var account = new Account(_walletPrivateKey);
     var walletAddress = account.Address;
 
@@ -111,7 +112,7 @@ class DimoApi : IDimoApi
       .GetStringAsync(ct);
 
     var challengeJson = JObject.Parse(challengeText).ToObject<ChallengeResponse>();
-    
+
     var signer = new EthereumMessageSigner();
     var signedChallenge = signer.EncodeUTF8AndSign(challengeJson.Challenge, new EthECKey(_walletPrivateKey));
 
@@ -125,16 +126,33 @@ class DimoApi : IDimoApi
         signature = signedChallenge,
       }, ct)
       .ReceiveJson<SubmitChallengeResponse>();
-    
+
     _tokenExpiresAt = DateTime.UtcNow.AddSeconds(authResponse.ExpiresIn);
     _accessToken = authResponse.AccessToken;
-    
+
     // Makes sure the account exists, avoiding a 500 later on
     await $"{_usersApiHost}/v1/user"
       .WithHeader("Authorization", $"Bearer {_accessToken}")
       .GetAsync(ct);
 
     return _accessToken;
+  }
+
+  async Task<SharedDevice> IDimoApi.GetVehicleStatusAsync(string vin, CancellationToken ct)
+  {
+    var dimoAccessToken = await GetDimoAccessToken(ct);
+    var sharedDevices = await GetSharedDevices(dimoAccessToken, ct);
+
+    if (!sharedDevices.Any(sd => sd.Vin == vin))
+    {
+      throw new Exception($"Vehicle {vin} is not shared with the current user");
+    }
+
+    var sharedDevice = sharedDevices.Single(sd => sd.Vin == vin);
+    var deviceAccessToken = await GetDeviceAccessToken(dimoAccessToken, sharedDevice.NftTokenId, ct);
+    sharedDevice.DeviceStatus = await GetVehicleStatusAsync(deviceAccessToken, sharedDevice.NftTokenId, ct);
+
+    return sharedDevice;
   }
 }
 
@@ -160,7 +178,7 @@ internal record SubmitChallengeResponse
 
   [JsonProperty(PropertyName = "expires_in")]
   public int ExpiresIn { get; set; }
-  
+
   [JsonProperty(PropertyName = "message")]
   public string? Message { get; set; }
   [JsonProperty(PropertyName = "status")]
