@@ -175,7 +175,7 @@ class VehicleService : IVehicleService
     return _dbContext.Vehicles;
   }
 
-  async Task IVehicleService.FetchDimoDataAsync(string vin, string username, CancellationToken ct)
+  public async Task AddVehicleFromDimoAsync(string vin, string username, CancellationToken ct)
   {
     var sharedDevice = await _dimoApi.GetVehicleStatusAsync(vin, ct);
 
@@ -190,6 +190,7 @@ class VehicleService : IVehicleService
         Vin = vin,
         DimoVehicleStatus = sharedDevice.DeviceStatus,
       };
+      await PopulateVehicleWithLatestDataAsync(_dbContext, vehicle, ct);
       _dbContext.Add(vehicle);
     }
     else

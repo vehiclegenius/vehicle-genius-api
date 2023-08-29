@@ -16,5 +16,5 @@ public interface IVehicleService
   void AssignVehicleToUserAsync(VehicleGeniusDbContext context, string username, Guid vehicleId);
   Task AssignVehicleToUserAsync(string username, Guid vehicleId);
   Task SyncVehicleDataAsync(Guid vehicleId, CancellationToken ct);
-  Task FetchDimoDataAsync(string vin, string username, CancellationToken ct);
+  Task AddVehicleFromDimoAsync(string vin, string username, CancellationToken ct);
 }

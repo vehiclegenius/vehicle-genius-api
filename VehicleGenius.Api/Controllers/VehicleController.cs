@@ -59,7 +59,7 @@ public class VehicleController : ControllerBase
       return Ok();
     }
 
-    await _vehicleService.FetchDimoDataAsync(vin, username, ct);
+    await _vehicleService.AddVehicleFromDimoAsync(vin, username, ct);
     return Ok();
   }
 }
