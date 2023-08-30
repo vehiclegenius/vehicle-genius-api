@@ -1,4 +1,3 @@
-using System.Text;
 using Flurl;
 using Flurl.Http;
 using Nethereum.Signer;
@@ -44,6 +43,7 @@ class DimoApi : IDimoApi
     {
       var deviceAccessToken = await GetDeviceAccessToken(dimoAccessToken, sharedDevice.NftTokenId, ct);
       sharedDevice.DeviceStatus = await GetVehicleStatusAsync(deviceAccessToken, sharedDevice.NftTokenId, ct);
+      sharedDevice.AccessToken = deviceAccessToken;
     }
 
     return sharedDevices;
@@ -67,11 +67,18 @@ class DimoApi : IDimoApi
     string deviceNftTokenId,
     CancellationToken ct)
   {
-    var response = await $"{_devicesApiHost}/v1/vehicle/{deviceNftTokenId}/status"
-      .WithHeader("Authorization", $"Bearer {deviceAccessToken}")
-      .GetJsonAsync<DimoVehicleStatus>(ct);
-
-    return response;
+    try
+    {
+      var response = await $"{_devicesApiHost}/v1/vehicle/{deviceNftTokenId}/status"
+        .WithHeader("Authorization", $"Bearer {deviceAccessToken}")
+        .GetJsonAsync<DimoVehicleStatus>(ct);
+      return response;
+    }
+    catch (FlurlHttpException e)
+    {
+      Console.WriteLine($"Error getting vehicle status for device NftTokenId:{deviceNftTokenId}, setting default: {e.Message}");
+      return new DimoVehicleStatus();
+    }
   }
 
   private async Task<string> GetDeviceAccessToken(string dimoAccessToken, string nftTokenId, CancellationToken ct)
@@ -151,7 +158,7 @@ class DimoApi : IDimoApi
     return _accessToken;
   }
 
-  async Task<SharedDevice> IDimoApi.GetVehicleStatusAsync(string vin, CancellationToken ct)
+  public async Task<SharedDevice> GetVehicleStatusAsync(string vin, CancellationToken ct)
   {
     var dimoAccessToken = await GetDimoAccessToken(ct);
     var sharedDevices = await GetSharedDevices(dimoAccessToken, ct);
@@ -164,6 +171,7 @@ class DimoApi : IDimoApi
     var sharedDevice = sharedDevices.Single(sd => sd.Vin == vin);
     var deviceAccessToken = await GetDeviceAccessToken(dimoAccessToken, sharedDevice.NftTokenId, ct);
     sharedDevice.DeviceStatus = await GetVehicleStatusAsync(deviceAccessToken, sharedDevice.NftTokenId, ct);
+    sharedDevice.AccessToken = deviceAccessToken;
 
     return sharedDevice;
   }
