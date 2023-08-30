@@ -24,5 +24,6 @@ public record SharedDevice
   public string Vin { get; set; }
   public string NftTokenId { get; set; }
   public string OwnerAddress { get; set; }
+  public string AccessToken { get; set; }
   public DimoVehicleStatus? DeviceStatus { get; set; }
 }

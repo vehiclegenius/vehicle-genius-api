@@ -49,6 +49,19 @@ class DimoApi : IDimoApi
     return sharedDevices;
   }
 
+  public async Task<(string, List<SharedDevice>)> GetDeviceTokensAsync(CancellationToken ct)
+  {
+    var dimoAccessToken = await GetDimoAccessToken(ct);
+    var sharedDevices = await GetSharedDevices(dimoAccessToken, ct);
+
+    foreach (var sharedDevice in sharedDevices)
+    {
+      sharedDevice.AccessToken = await GetDeviceAccessToken(dimoAccessToken, sharedDevice.NftTokenId, ct);
+    }
+
+    return (dimoAccessToken, sharedDevices);
+  }
+
   private async Task<DimoVehicleStatus> GetVehicleStatusAsync(
     string deviceAccessToken,
     string deviceNftTokenId,
