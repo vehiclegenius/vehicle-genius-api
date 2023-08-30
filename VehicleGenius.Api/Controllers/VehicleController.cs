@@ -54,11 +54,6 @@ public class VehicleController : ControllerBase
   [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
   public async Task<IActionResult> FetchDimoData(string vin, string username, CancellationToken ct)
   {
-    if (await _vehicleService.VehicleExistsAsync(vin, ct))
-    {
-      return Ok();
-    }
-
     await _vehicleService.AddVehicleFromDimoAsync(vin, username, ct);
     return Ok();
   }
