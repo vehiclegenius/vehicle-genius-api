@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -64,12 +64,22 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "SyncVehicleData Production": {
+    "SyncVehicleData_Production": {
       "commandName": "Project",
       "commandLineArgs": "SyncVehicleData",
       "dotnetRunMessages": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5169",
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    },
+    "SyncVehicleStatus_Production": {
+      "commandName": "Project",
+      "commandLineArgs": "SyncVehicleStatus",
+      "dotnetRunMessages": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }
