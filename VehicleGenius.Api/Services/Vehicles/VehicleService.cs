@@ -177,7 +177,11 @@ class VehicleService : IVehicleService
 
   public async Task AddVehicleFromDimoAsync(string vin, string username, CancellationToken ct)
   {
-    var sharedDevice = await _dimoApi.GetVehicleStatusAsync(vin, ct);
+    var sharedDevice = await NetworkHelper.RetryWithExponentialBackoffAsync(
+        () => _dimoApi.GetVehicleStatusAsync(vin, ct),
+        ct,
+        TimeSpan.FromSeconds(30)
+    );
 
     var vehicle = await GetQueryable()
       .FirstOrDefaultAsync(v => v.Vin == vin, ct);
