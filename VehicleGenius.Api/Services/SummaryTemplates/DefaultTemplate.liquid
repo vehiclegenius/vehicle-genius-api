@@ -79,6 +79,9 @@ Vehicle's ownership cost data:
 {{ end ~}}
 - Estimated 5-year total cost: ${{ OwnershipCost.TotalCostSum }}
 
+Vehicle's status:
+- Odometer: {{ DeviceStatus.Odometer }}
+
 User-inputted data (0 or 01/01/0001 means no data):
 - Insurance rate ($): {{ UserData.InsuranceRate }}
 - Insurance provider: {{ UserData.InsuranceProvider }}
