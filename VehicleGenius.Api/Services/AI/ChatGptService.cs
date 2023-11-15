@@ -59,7 +59,7 @@ class ChatGptService : IAiService
 
     if (!completionResult.Successful)
     {
-      throw new Exception("ChatGPT failed to parse prompt.");
+      throw new Exception($"ChatGPT failed to parse prompt. Code: {completionResult.Error.Code}, Message: {completionResult.Error.Message}");
     }
 
     var responseContent = completionResult.Choices.First().Message.Content;
