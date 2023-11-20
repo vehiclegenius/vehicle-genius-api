@@ -1,6 +1,6 @@
-using OpenAI.GPT3;
-using OpenAI.GPT3.Managers;
-using OpenAI.GPT3.ObjectModels.RequestModels;
+using OpenAI;
+using OpenAI.Managers;
+using OpenAI.ObjectModels.RequestModels;
 using VehicleGenius.Api.Dtos;
 using VehicleGenius.Api.Services.SummaryTemplates;
 
@@ -34,7 +34,7 @@ class ChatGptService : IAiService
         ChatMessage.FromSystem(summaryTemplate.SystemPrompt),
         ChatMessage.FromUser(userPrompt),
       },
-      Model = "gpt-3.5-turbo",
+      Model = OpenAI.ObjectModels.Models.Gpt_4,
       Temperature = (float)0,
       TopP = (float)0.95,
       PresencePenalty = 0,
