@@ -18,20 +18,13 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "https": {
+    "http_Production": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7181;http://localhost:5169",
+      "applicationUrl": "http://localhost:5169",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
     "SyncVehicleData": {
@@ -80,6 +73,16 @@
       "dotnetRunMessages": true,
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    },
+    "GetAccessTokens_Production": {
+      "commandName": "Project",
+      "commandLineArgs": "GetAccessTokens",
+      "dotnetRunMessages": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5169",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       }

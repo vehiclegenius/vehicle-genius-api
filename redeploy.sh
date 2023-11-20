@@ -3,7 +3,7 @@
 # Exit on first error
 set -e
 
-sudo supervisorctl stop vehicle-genius-api || 0
+sudo supervisorctl stop vehicle-genius-api || true
 
 (cd VehicleGenius.Api && ./build.sh)
 
