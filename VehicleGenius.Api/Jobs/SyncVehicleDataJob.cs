@@ -28,7 +28,14 @@ public class SyncVehicleDataJob : IProgramJob
     // TODO eventually move this to a queue
     foreach (var vehicle in vehicles) {
       Console.WriteLine($"Syncing vehicle {vehicle.Id} with VIN {vehicle.Vin}");
-      await _vehicleService.SyncVehicleDataAsync(vehicle.Id, CancellationToken.None);
+      try
+      {
+        await _vehicleService.SyncVehicleDataAsync(vehicle.Id, CancellationToken.None);
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine(ex.Message);
+      }
     }
 
     Console.WriteLine("Done syncing vehicle data.");

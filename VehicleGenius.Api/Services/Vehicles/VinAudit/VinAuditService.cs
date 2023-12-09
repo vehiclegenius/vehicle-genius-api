@@ -16,12 +16,19 @@ class VinAuditService : IVinAuditService
 
   public async Task<VinAuditData> GetVinAuditData(VinAuditPromptData vinAuditPromptData)
   {
-    return new VinAuditData
+    var data = new VinAuditData
     {
       Specifications = await GetSpecifications(vinAuditPromptData),
       MarketValue = await GetMarketValue(vinAuditPromptData),
       OwnershipCost = await GetOwnershipCost(vinAuditPromptData),
     };
+
+    if (!data.Specifications.Success || !data.OwnershipCost.Success || !data.MarketValue.Success)
+    {
+      throw new Exception($"Error fetching full VinAudit data for VIN {vinAuditPromptData.Vin}.\nSpecifications success: {data.Specifications.Success};\nMarketValue success: {data.MarketValue.Success};\nOwnershipCost success: {data.OwnershipCost.Success}");
+    }
+
+    return data;
   }
 
   private async Task<VinAuditSpecificationsData> GetSpecifications(VinAuditPromptData vinAuditPromptData)
